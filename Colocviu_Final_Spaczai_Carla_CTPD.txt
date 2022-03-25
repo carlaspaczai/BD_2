@@ -1,0 +1,158 @@
+CREATE TABLE Furnizori (
+    idf VARCHAR(10),
+    numef VARCHAR(50),
+    stare FLOAT(5, 0),
+    oras VARCHAR(50),
+    CONSTRAINT furnizori_ck CHECK (idf LIKE 'F_%')
+);
+                       
+CREATE TABLE Componente (
+    idc VARCHAR(10),
+    numec VARCHAR(50),
+    culoare VARCHAR(20),
+    masa FLOAT(10, 4),
+    oras VARCHAR(50),
+    CONSTRAINT componente_ck CHECK (idc LIKE 'C_%')
+);
+
+CREATE TABLE Proiecte (
+    idp VARCHAR(10),
+    numep VARCHAR(50),
+    oras VARCHAR(50),
+    CONSTRAINT proiecte_ck CHECK (idp LIKE 'P_%')
+);
+
+CREATE TABLE Livrari (
+    idf VARCHAR(10),
+    idc VARCHAR(10),
+    idp VARCHAR(10),
+    cantitate FLOAT(10, 0)
+);
+
+ALTER TABLE Furnizori
+ADD CONSTRAINT furnizori_pk PRIMARY KEY (idf);
+ALTER TABLE Componente
+ADD CONSTRAINT componente_pk PRIMARY KEY (idc);
+ALTER TABLE Proiecte
+ADD CONSTRAINT proiecte_pk PRIMARY KEY (idp);
+ALTER TABLE Livrari
+ADD CONSTRAINT livrari_pk PRIMARY KEY (idf, idc, idp);
+ALTER TABLE Livrari
+ADD CONSTRAINT furnizori_livrari_fk FOREIGN KEY (idf) REFERENCES Furnizori (idf);
+ALTER TABLE Livrari
+ADD CONSTRAINT componente_livrari_fk FOREIGN KEY (idc) REFERENCES Componente (idc);
+ALTER TABLE Livrari
+ADD CONSTRAINT proiecte_livrari_fk FOREIGN KEY (idp) REFERENCES Proiecte (idp);
+
+ALTER TABLE Livrari
+ADD um VARCHAR2(30);
+
+ALTER TABLE Livrari
+ADD CONSTRAINT livrari_ck CHECK (um IN ('buc', 'kg', 'm'));
+
+ALTER TABLE Componente
+ADD CONSTRAINT c_culoare_nume_ck CHECK 
+(LOWER(culoare) <> 'verde' OR (LOWER(culoare) = 'verde' AND LOWER(numec) LIKE '%bio%'));
+
+INSERT INTO Furnizori
+VALUES ('F1', 'CARREFOUR ROMANIA SA', 1, 'Bucuresti');
+INSERT INTO Furnizori
+VALUES ('F47', 'ENGIE ROMANIA', 0, 'Cluj-Napoca');
+INSERT INTO Furnizori
+VALUES ('F3', 'BCR LEASING IFN SA', 5, 'Piatra Neamt');
+INSERT INTO Furnizori
+VALUES ('F93', 'NORD GAZ SRL', 3, 'Sighetu Marmatiei');
+INSERT INTO Furnizori
+VALUES ('F178', 'PORSCHE BANK ROMANIA S.A.', 1, 'Brasov');
+INSERT INTO Furnizori
+VALUES ('F746', 'UNIQA ASIGURARI SA', 5, 'Brasov');
+INSERT INTO Furnizori
+VALUES ('F68', 'PAYPOINT SERVICES SRL', 4, 'Cluj-Napoca');
+INSERT INTO Furnizori
+VALUES ('F842', 'Garanti Bank SA', 2, 'Iasi');
+INSERT INTO Furnizori
+VALUES ('F71', 'VIVA CREDIT IFN SA', 1, 'Brasov');
+INSERT INTO Furnizori
+VALUES ('F288', 'LUMINA INSTITUTII DE INVATAMANT SA', 5, 'Cluj-Napoca');
+INSERT INTO Furnizori
+VALUES ('F92', 'APA SERV SA', 5, 'Cluj-Napoca');
+
+INSERT INTO Componente
+VALUES ('C1', 'Varza Bio', 'Verde', 135, 'Brasov');
+INSERT INTO Componente
+VALUES ('C73', 'Card', 'Galben', 10, 'Suceava');
+INSERT INTO Componente
+VALUES ('C936', 'Suruburi', 'Negru', 240, 'Constanta');
+INSERT INTO Componente
+VALUES ('C7', 'Hartie', 'Alb', 0.2, 'Alba Iulia');
+INSERT INTO Componente
+VALUES ('C63', 'Suc Bio', 'Verde', 500, 'Alba Iulia');
+INSERT INTO Componente
+VALUES ('C84', 'Bec', 'Alb', 30, 'Piatra Neamt');
+INSERT INTO Componente
+VALUES ('C94', 'Bec', 'Alb', 20, 'Piatra Neamt');
+INSERT INTO Componente
+VALUES ('C4', 'Rosii', 'Rosu', 25, 'Cluj-Napoca');
+INSERT INTO Componente
+VALUES ('C92', 'Portocale', 'Portocaliu', 40, 'Cluj-Napoca');
+INSERT INTO Componente
+VALUES ('C400', 'Mere', 'Galben', 30, 'Cluj-Napoca');
+
+
+INSERT INTO Proiecte
+VALUES ('P2', 'O Cana De Fericire', 'Piatra Neamt');
+INSERT INTO Proiecte
+VALUES ('P73', 'Ajutorul Pensionarilor', 'Iasi');
+INSERT INTO Proiecte
+VALUES ('P024', 'Ziua Copilului', 'Cluj-Napoca');
+INSERT INTO Proiecte
+VALUES ('P92', 'Mancarea Tuturor', 'Sighetu Marmatiei');
+INSERT INTO Proiecte
+VALUES ('P837', 'Prima Masina', 'Timisoara');
+INSERT INTO Proiecte
+VALUES ('P6', 'Asambleaza Singur', 'Cluj-Napoca');
+INSERT INTO Proiecte
+VALUES ('P657', 'Targul De Craciun', 'Timisoara');
+INSERT INTO Proiecte
+VALUES ('P0', 'Plateste Mai Usor', 'Arad');
+INSERT INTO Proiecte
+VALUES ('P001', 'Ajuta O Viata', 'Cluj-Napoca');
+
+INSERT INTO Livrari
+VALUES ('F746', 'C7', 'P73', 1000, 'buc');
+INSERT INTO Livrari
+VALUES ('F1', 'C1', 'P92', 190, 'kg');
+INSERT INTO Livrari
+VALUES ('F47', 'C84', 'P657', 8500, 'buc');
+INSERT INTO Livrari
+VALUES ('F178', 'C936', 'P6', 90200, 'buc');
+INSERT INTO Livrari
+VALUES ('F1', 'C63', 'P2', 5800, 'kg');
+INSERT INTO Livrari
+VALUES ('F842', 'C73', 'P73', 150, 'm');
+INSERT INTO Livrari
+VALUES ('F71', 'C73', 'P0', 300, 'm');
+INSERT INTO Livrari
+VALUES ('F178', 'C7', 'P837', 3000, 'buc');
+INSERT INTO Livrari
+VALUES ('F3', 'C84', 'P2', 610, 'buc');
+INSERT INTO Livrari
+VALUES ('F178', 'C7', 'P6', 3000, 'buc');
+INSERT INTO Livrari
+VALUES ('F178', 'C7', 'P657', 3000, 'buc');
+INSERT INTO Livrari
+VALUES ('F1', 'C92', 'P2', 1000, 'buc');
+INSERT INTO Livrari
+VALUES ('F1', 'C4', 'P2', 1200, 'buc');
+INSERT INTO Livrari
+VALUES ('F47', 'C4', 'P2', 1000, 'buc');
+INSERT INTO Livrari
+VALUES ('F47', 'C1', 'P657', 600, 'm');
+INSERT INTO Livrari
+VALUES ('F1', 'C1', 'P657', 300, 'kg');
+INSERT INTO Livrari
+VALUES ('F178', 'C1', 'P001', 400, 'kg');
+INSERT INTO Livrari
+VALUES ('F842', 'C1', 'P001', 600, 'buc');
+INSERT INTO Livrari
+VALUES ('F842', 'C1', 'P2', 1400, 'm');

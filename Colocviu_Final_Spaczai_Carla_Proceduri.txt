@@ -1,0 +1,37 @@
+--componenta_oras()
+
+SELECT numec
+FROM Componente
+WHERE oras IN (SELECT oras
+FROM Proiecte
+WHERE idp = 'P001')
+
+--componenta_putina()
+
+SELECT numec
+FROM Componente
+WHERE oras = 'Cluj-Napoca' AND idc IN (SELECT idc
+FROM Livrari
+WHERE cantitate <= ALL (SELECT cantitate
+FROM Livrari
+WHERE idp IN (SELECT idp
+FROM Proiecte
+WHERE oras = 'Piatra Neamt') AND idc IN (SELECT idc
+FROM Componente
+WHERE oras = 'Cluj-Napoca')))
+
+--perechi_idp()
+
+SELECT DISTINCT L1.idp AS "idp1", L2.idp AS "idp2"
+FROM Livrari L1 JOIN Livrari L2 ON (L1.idf = L2.idf 
+AND L1.idc = L2.idc
+AND L1.cantitate = L2.cantitate
+AND L1.um = L2.um
+AND L1.idp < L2.idp)
+
+--proiect_cantitate_totala()
+
+SELECT Proiecte.numep AS "proiect", Componente.numec AS "piesa", Livrari.um AS "um", SUM(Livrari.cantitate) AS "cantitate_totala"
+FROM Livrari INNER JOIN Proiecte ON (Livrari.idp = Proiecte.idp) INNER JOIN Componente ON (Livrari.idc = Componente.idc)
+GROUP BY Proiecte.numep, Componente.numec, Livrari.um
+ORDER BY Proiecte.numep
